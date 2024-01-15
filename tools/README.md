@@ -1,6 +1,6 @@
 ## /tools
 
-### recalibrate-state-sync.sh
+### [recalibrate-state-sync.sh](../tools/recalibrate-state-sync.sh)
 
 This tool recalibrates your state-sync configurations to a more recent height. **WARNING: this wipes your entire data folder, but will backup and restore the priv_validator_state.json file**. It uses the script(s) from the [`restate-sync`](https://github.com/zenodeapp/restate-sync/tree/v1.0.0) repository (`v1.0.0`). If in doubt whether this is safe, you could always check the repository to see how it works.
 
@@ -17,7 +17,7 @@ sh tools/recalibrate-state-sync.sh [height_interval] [rpc_server_1] [rpc_server_
 > [!NOTE]
 > Leaving the _<rpc_server>_-arguments empty will leave the rpc_servers field in your config.toml untouched.
 
-### shift-ports.sh
+### [shift-ports.sh](../tools/shift-ports.sh)
 
 This script is useful if you quickly want to replace the ports in the `client.toml`, `config.toml` and `app.toml` files. It uses the script(s) from the [`port-shifter`](https://github.com/zenodeapp/port-shifter/tree/v1.0.1) repository (`v1.0.1`). If in doubt whether this is safe, you could always check the repository to see how it works.
 

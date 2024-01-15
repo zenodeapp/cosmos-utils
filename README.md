@@ -7,11 +7,11 @@ This has been written by ZENODE and is licensed under the MIT-license (see [LICE
 
 ## \_variables.sh
 
-This should hold all the repository-specific variables shared with most of the scripts. This makes it easier to adjust the chain-id, binary name or node directory without having to change it in a lot of different files. See the [.\_variables.sh.example](/._variables.sh.example) for an example.
+This should hold all the repository-specific variables shared with most of the scripts. This makes it easier to adjust the chain-id, binary name or node directory without having to change it in a lot of different files. See the [.\_variables.sh.example](./._variables.sh.example) for an example.
 
 ## /backup
 
-### create.sh
+### [create.sh](./backup/create.sh)
 
 This script creates a backup for the current node-setup, if one existed.
 
@@ -23,21 +23,21 @@ sh backup/create.sh [backup_dir_path]
 
 ## /fetch
 
-### peers.sh
+### [peers.sh](./fetch/peers.sh)
 
 This script fetches the (most recent) seeds and peers for the chain-id configured in the [\_variables.sh](./_variables.sh) file and adds it to the `seeds` and `persistent_peers` fields in the config.toml file residing in the node's directory.
 
-### rpcs.sh
+### [rpcs.sh](./fetch/rpcs.sh)
 
 This script fetches the (most recent) rpc_servers (state sync) for the chain-id configured in the [\_variables.sh](./_variables.sh) file and adds it to the `rpc_servers` field in the config.toml file residing in the node's directory.
 
-### state.sh
+### [state.sh](./fetch/state.sh)
 
 This script fetches the (most recent) `genesis.json` file for the chain-id configured in the [\_variables.sh](./_variables.sh) file and places it inside of the /config-folder residing in the node's directory.
 
 ## /info
 
-### my-peer.sh
+### [my-peer.sh](./info/my-peer.sh)
 
 This script will print out your peer-id: _node-id@ip-address:port_. This is useful for sharing your node with others so that they can add you as a persistent peer.
 
@@ -47,7 +47,7 @@ Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-fi
 
 ## /key
 
-### create.sh
+### [create.sh](./key/create.sh)
 
 This script creates a _new_ key (or prompts to overwrite one if the _alias_ already exists).
 
@@ -55,7 +55,7 @@ This script creates a _new_ key (or prompts to overwrite one if the _alias_ alre
 sh key/create.sh <key_alias>
 ```
 
-### import.sh
+### [import.sh](./key/import.sh)
 
 This script imports an _existing_ key using the provided _private Ethereum key_.
 
@@ -65,17 +65,17 @@ sh key/import.sh <key_alias> <private_eth_key>
 
 ## /service
 
-### install.sh
+### [install.sh](./service/install.sh)
 
-This script installs the daemon as a service, which will automatically start the node whenever the device reboots. See the `$SERVICE_DIR` and `$SERVICE_FILE` variables in [\_variables.sh](/_variables.sh) to see which service gets installed.
+This script installs the daemon as a service, which will automatically start the node whenever the device reboots. See the `$SERVICE_DIR` and `$SERVICE_FILE` variables in [\_variables.sh](./_variables.sh) to see which service gets installed.
 
-### uninstall.sh
+### [uninstall.sh](./service/uninstall.sh)
 
-This script uninstalls the daemon as a service. See the `$SERVICE_FILE` variable in [\_variables.sh](/_variables.sh) to see which service gets uninstalled.
+This script uninstalls the daemon as a service. See the `$SERVICE_FILE` variable in [\_variables.sh](./_variables.sh) to see which service gets uninstalled.
 
 ## /tools
 
-### recalibrate-state-sync.sh
+### [recalibrate-state-sync.sh](./tools/recalibrate-state-sync.sh)
 
 This tool recalibrates your state-sync configurations to a more recent height. **WARNING: this wipes your entire data folder, but will backup and restore the priv_validator_state.json file**. It uses the script(s) from the [`restate-sync`](https://github.com/zenodeapp/restate-sync/tree/v1.0.0) repository (`v1.0.0`). If in doubt whether this is safe, you could always check the repository to see how it works.
 
@@ -92,7 +92,7 @@ sh tools/recalibrate-state-sync.sh [height_interval] [rpc_server_1] [rpc_server_
 > [!NOTE]
 > Leaving the _<rpc_server>_-arguments empty will leave the rpc_servers field in your config.toml untouched.
 
-### shift-ports.sh
+### [shift-ports.sh](./tools/shift-ports.sh)
 
 This script is useful if you quickly want to replace the ports in the `client.toml`, `config.toml` and `app.toml` files. It uses the script(s) from the [`port-shifter`](https://github.com/zenodeapp/port-shifter/tree/v1.0.1) repository (`v1.0.1`). If in doubt whether this is safe, you could always check the repository to see how it works.
 
@@ -101,7 +101,6 @@ sh utils/shift-ports.sh <port_increment_value>
 ```
 
 > <port_increment_value> is how much you would like to increment the value of the ports based on the default port values.
-[replace_with_module_readmes]
 
 </br>
 

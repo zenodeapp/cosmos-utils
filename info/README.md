@@ -1,6 +1,6 @@
 ## /info
 
-### my-peer.sh
+### [my-peer.sh](../info/my-peer.sh)
 
 This script will print out your peer-id: _node-id@ip-address:port_. This is useful for sharing your node with others so that they can add you as a persistent peer.
 

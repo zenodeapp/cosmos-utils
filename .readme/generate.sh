@@ -20,11 +20,12 @@ for MODULE in $MODULES; do
     if [ -f "$README" ]; then
         # Append module README content to the destination README.md
         echo "" >> "$OUTPUT"
-        cat "$README" >> "$OUTPUT"
+        # cat "$README" >> "$OUTPUT"
+        awk '{gsub(/\]\(\.\.\//, "](./"); print}' "$README" >> "$OUTPUT"
     fi
 done
 
 # Read the remaining content from the template file
-awk '/\[replace_with_module_readmes\]/,0 { print }' "$INPUT" >> "$OUTPUT"
+awk '/\[replace_with_module_readmes\]/ { f=1; next } f { print }' "$INPUT" >> "$OUTPUT"
 
 echo "New README.md generated."

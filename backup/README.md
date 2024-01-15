@@ -1,6 +1,6 @@
 ## /backup
 
-### create.sh
+### [create.sh](../backup/create.sh)
 
 This script creates a backup for the current node-setup, if one existed.
 
