@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# RESTATE SYNC for recalibrating to a more recent height.
+# RESTATE SYNC for recalibrating to a more recent height (Wrapper variant)
 # Original: https://github.com/zenodeapp/restate-sync
 # ZENODE (https://zenode.app)
 
