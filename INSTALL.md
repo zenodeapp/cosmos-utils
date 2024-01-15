@@ -13,4 +13,4 @@ The modules require variables which you can configure in the [\_variables.sh](./
 
 ## 3. Maintenance
 
-Upgrading the modules (or adding new ones) can be done using the [updater.sh]()-file in the [.version](./.version)-folder. For more information, see the [README](./.version/README.md) inside that folder.
+Upgrading the modules (or adding new ones) can be done using the [update.sh](./.version/update.sh)-file in the [.version](./.version)-folder. For more information, see the [README](./.version/README.md) inside that folder.
