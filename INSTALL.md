@@ -4,8 +4,8 @@
 
 Integrating these scripts into your repository is not difficult. You could either:
 
-- add it as a submodule, which will use github's versioning, but does require everyone to _recursively_ pull your repository.
-- simply use the [install.sh](./install.sh) script. This gives you the choice to install whatever module you wish to incorporate.
+- Add it as a submodule, which will use github's versioning, but does require everyone to _recursively_ pull your repository.
+- If you prefer to not include this as a repository, then simply use the [install.sh](./install.sh) script. This gives you the choice to install whatever module you wish to incorporate.
 
 ## 2. Configure
 
