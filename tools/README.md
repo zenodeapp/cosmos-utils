@@ -2,6 +2,9 @@
 
 ### [recalibrate-state-sync.sh](../tools/recalibrate-state-sync.sh)
 
+> [!CAUTION]
+> Only use this if the network your node is connected to supports state sync!
+
 This tool recalibrates your state-sync configurations to a more recent height. **WARNING: this wipes your entire data folder, but will backup and restore the priv_validator_state.json file**. It uses the script(s) from the [`restate-sync`](https://github.com/zenodeapp/restate-sync/tree/v1.0.0) repository (`v1.0.0`). If in doubt whether this is safe, you could always check the repository to see how it works.
 
 ```
