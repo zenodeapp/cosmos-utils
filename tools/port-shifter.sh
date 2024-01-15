@@ -24,6 +24,8 @@ wget -O $SAVE_AS $EXTERNAL_REPO/quick-shift.sh
 # See: https://github.com/zenodeapp/port-shifter/blob/v1.0.1/shift-wizard.sh
 # wget -O $SAVE_AS $EXTERNAL_REPO/shift-wizard.sh
 
-# Execute script and remove it
+# Execute script
 sh $SAVE_AS "$CONFIG_DIR" $1
+
+# Cleanup
 rm $SAVE_AS
