@@ -15,9 +15,8 @@ echo "" > "$OUTPUT"
 awk '/\[replace_with_module_readmes\]/ { exit } { print }' "$INPUT" >> "$OUTPUT"
 
 # Loop through the modules and append their README content
-for module in $modules; do
-    README="$ROOT/${module}/README.md"
-
+for MODULE in $MODULES; do
+    README="$ROOT/${MODULE}/README.md"
     if [ -f "$README" ]; then
         # Append module README content to the destination README.md
         echo "" >> "$OUTPUT"
