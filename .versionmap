@@ -1,0 +1,15 @@
+.version/update.sh v1.0.0 x
+._variables.sh.example v1.0.0 f
+.gitignore v1.0.0 f
+backup/create.sh v1.0.0
+fetch/peers.sh v1.0.0
+fetch/rpcs.sh v1.0.0
+fetch/state.sh v1.0.0
+info/my-peer.sh v1.0.0
+key/create.sh v1.0.0
+key/import.sh v1.0.0
+service/install.sh v1.0.0
+service/uninstall.sh v1.0.0
+service/recalibrate-state-sync.sh v1.0.0
+service/shift-ports.sh v1.0.1
+LICENSE v1.0.0 f
