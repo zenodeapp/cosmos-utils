@@ -1,55 +1,57 @@
 #!/bin/bash
 
 # Specify the heading or section to filter out
-FILTERED_HEADING=$3
+EXCLUSIONS=$3
 
 # Input and output file paths
 INPUT_FILE=$1
 OUTPUT_FILE=$2
 
-# Flag to indicate whether to skip the undesired heading and its content
-SKIP=false
-
-# Flag to indicate whether the current line is within the target section
-WITHIN_SECTION=false
-
-# Section and heading to filter out
-TARGET_SECTION=""
-TARGET_HEADING=""
+# Function to check if a given heading or section is in the exclusion list
+isExcluded() {
+    local value="$1"
+    local exclusions="$2"
+    for exclusion in $(echo "$exclusions" | tr ',' ' '); do
+        if [ "$value" == "$exclusion" ]; then
+            echo "0"
+            return 0  # No match found, return failure
+        fi
+    done
+    echo "1"
+    return 1  # No match found, return failure
+}
 
 # Check if the filtered heading contains a section
-if [[ "$FILTERED_HEADING" == *"/"* ]]; then
-    TARGET_SECTION=$(echo "$FILTERED_HEADING" | cut -d '/' -f 1)
-    TARGET_HEADING=$(echo "$FILTERED_HEADING" | cut -d '/' -f 2)
-else
-    TARGET_SECTION="$FILTERED_HEADING"
-fi
+section_excluded=false
+heading_excluded=false
 
 # Read the input file line by line
 while IFS= read -r line; do
     # Check if the line starts with ## to determine the section
-    if [[ "$line" =~ ^"## "/ ]]; then
-        if [[ "$line" == "## /$TARGET_SECTION"* ]]; then
-            WITHIN_SECTION=true
-            # Output the line if within the target section
-            if [ -z $TARGET_HEADING ]; then
-                SKIP=true
-            fi
+    if [[ "$line" =~ ^"## /" ]]; then
+        heading_excluded=false
+        # Extract the value after "## /"
+        section_value="${line##*## /}"
+        if [[ $(isExcluded "$section_value" "$EXCLUSIONS") -eq 0 ]]; then
+          section_excluded=true
         else
-            WITHIN_SECTION=false
-            SKIP=false
+          section_excluded=false
         fi
     fi
 
-    # Check if the line starts with the heading to filter out
-    if [[ "$line" =~ ^"### [$TARGET_HEADING]"* && "$WITHIN_SECTION" == true ]]; then
-        SKIP=true
-    elif [[ "$line" =~ ^"### "* && "$SKIP" == true ]]; then
-        SKIP=false
+    if [[ "$line" =~ ^"### [" ]]; then
+        # Extract the value after "## /"
+        heading_value=$(echo "$line" | awk -F"[][]" '{print $2}')
+        if [[ $(isExcluded "$section_value/$heading_value" "$EXCLUSIONS") -eq 0 ]]; then
+          heading_excluded=true
+        else
+          heading_excluded=false
+        fi
+        echo $heading_excluded
     fi
 
     # Output the line if not skipping
-    if [ "$SKIP" != true ]; then
+    if [ "$section_excluded" = false ] && [ "$heading_excluded" = false ]; then
         echo "$line" >> "$OUTPUT_FILE"
     fi
 done < "$INPUT_FILE"
