@@ -14,7 +14,7 @@ ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 # Source the _variables.sh file
 . "$ROOT/_variables.sh"
 
-# Where the restate-sync.sh file has to be saved.
+# Where the downloaded script has to be saved
 SAVE_AS="$ROOT/tools/_restate-sync.sh"
 
 # Repository where the port shifter resides
