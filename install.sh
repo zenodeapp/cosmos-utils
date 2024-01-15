@@ -1,29 +1,49 @@
 #!/bin/bash
 
-# Path to .versionmap file
-VERSION_MAP=".versionmap"
+CURRENT=$(cd "$(dirname "$0")"/ && pwd)
+VERSION=main
+REPO=https://raw.githubusercontent.com/zenodeapp/cosmos-utils/$VERSION
+# Download the file silently
+wget -q $REPO/.version/.versionmap -O versionmap.txt
 
-# Read each line in the .versionmap file
-while IFS= read -r line; do
+bla=""
+
+
+# Check if download was successful
+if [ $? -eq 0 ]; then
+    echo "File downloaded successfully."
+
+    # Read the file line by line
+    while IFS= read -r line; do
   # Extract information from the line
   file_path=$(echo "$line" | awk '{print $1}')
-  force_pull=$(echo "$line" | awk '{print $2}')
+  file_version=$(echo "$line" | awk '{print $2}')
 
   # Prompt the user
-  read -p "Do you want to pull $file_path? (y/n) " response
-
-  if [ "$response" == "y" ] || [ "$response" == "Y" ]; then
-    # Perform the pull
-    if [ "$force_pull" == "f" ]; then
-      git checkout -- "$file_path"
-    else
-      git pull origin master --no-commit --no-ff -- "$file_path"
-    fi
-    echo "Pulled $file_path"
+  if [ -z $bla ]; then
+      bla=$file_path
   else
-    echo "Skipped pulling $file_path"
+      bla=$bla,$file_path
   fi
+    done < versionmap.txt
 
-done < "$VERSION_MAP"
+    # Optionally, you can remove the downloaded file after processing
+    rm versionmap.txt
+else
+    echo "Failed to download the file."
+fi
 
-echo "Pulling complete."
+  
+# Function to check if a given heading or section is in the exclusion list
+
+for exclusion in $(echo "$bla" | tr ',' ' '); do
+    echo $exclusion
+    read -p "Do you want to update $exclusion? (Y/n) " response
+    response=$(echo "$response" | tr 'A-Z' 'a-z')  # Convert to lowercase
+
+if [ "$response" != "n" ]; then
+    DIR=$(dirname "$exclusion")
+    mkdir -p "$CURRENT/test/$DIR"
+    wget -q "$REPO/$exclusion" -O "$CURRENT/test/$exclusion"
+fi
+done
