@@ -1,2 +1,5 @@
-# cosmos-utils
-This contains useful scripts for maintaining a Cosmos SDK based node setup. The utilities provided have an own versioning system so that those who make use of this could always pull the latest modules or jump onto different versions if they wish to do so.
+# Cosmos Utilities
+
+## \_variables.sh
+
+This should hold all the repository-specific variables shared with most of the scripts. This makes it easier to adjust the chain-id, binary name or node directory without having to change it in a lot of different files. See the [\_variables.sh.example](/_variables.sh.example) for an example.
