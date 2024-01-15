@@ -27,5 +27,11 @@ wget -O $SAVE_AS $EXTERNAL_REPO/quick-shift.sh
 # Execute script
 sh $SAVE_AS "$CONFIG_DIR" $1
 
+# Capture the exit status of the script execution
+RESULT=$?
+
 # Cleanup
 rm $SAVE_AS
+
+# Exit the script with the captured exit status, indicating success (0) or failure (non-zero)
+exit $RESULT
