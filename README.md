@@ -1,8 +1,9 @@
+
 # Cosmos Utilities
 
 This contains useful scripts for maintaining a Cosmos SDK based node setup. The utilities provided have an own versioning system so that those who make use of this could always pull the latest modules or jump onto different versions if they wish to do so.
 
-This has been written by ZENODE and is licensed under the MIT-license (see [LICENSE.md](./LICENSE.md)).
+This has been written by ZENODE and is licensed under the MIT-license (see [LICENSE](./LICENSE)).
 
 ## \_variables.sh
 
@@ -100,7 +101,7 @@ sh utils/shift-ports.sh <port_increment_value>
 ```
 
 > <port_increment_value> is how much you would like to increment the value of the ports based on the default port values.
-> [replace_with_module_readmes]
+[replace_with_module_readmes]
 
 </br>
 
