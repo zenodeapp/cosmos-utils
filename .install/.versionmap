@@ -1,5 +1,5 @@
 .install/_variables.sh.example v1.0.0
-.version/update.sh v1.0.0
+.install/update.sh v1.0.0
 backup/create.sh v1.0.0
 fetch/peers.sh v1.0.0
 fetch/rpcs.sh v1.0.0
@@ -11,6 +11,5 @@ service/install.sh v1.0.0
 service/uninstall.sh v1.0.0
 tools/restate-sync.sh v1.0.0
 tools/port-shifter.sh v1.0.1
-.gitignore v1.0.0
 LICENSE v1.0.0
 README.md v1.0.0
