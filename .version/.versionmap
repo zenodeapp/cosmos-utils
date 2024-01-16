@@ -1,4 +1,5 @@
-.version/updater.sh v1.0.0
+.install/_variables.sh.example v1.0.0
+.version/update.sh v1.0.0
 backup/create.sh v1.0.0
 fetch/peers.sh v1.0.0
 fetch/rpcs.sh v1.0.0
@@ -8,9 +9,8 @@ key/create.sh v1.0.0
 key/import.sh v1.0.0
 service/install.sh v1.0.0
 service/uninstall.sh v1.0.0
-service/recalibrate-state-sync.sh v1.0.0
-service/shift-ports.sh v1.0.1
-_variables.sh.example v1.0.0
+tools/restate-sync.sh v1.0.0
+tools/port-shifter.sh v1.0.1
 .gitignore v1.0.0
 LICENSE v1.0.0
 README.md v1.0.0

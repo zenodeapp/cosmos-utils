@@ -2,3 +2,4 @@ tools/restate-sync.sh
 tools/quick-shift.sh
 tools/shift-wizard.sh
 README.md.tmp
+.build
