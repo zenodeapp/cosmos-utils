@@ -1,4 +1,3 @@
-
 # Cosmos Utilities
 
 This contains useful scripts for maintaining a Cosmos SDK based node setup. The utilities provided have an own versioning system so that those who make use of this could always pull the latest modules or jump onto different versions if they wish to do so.
@@ -6,11 +5,7 @@ This contains useful scripts for maintaining a Cosmos SDK based node setup. The 
 This has been written by ZENODE and is licensed under the MIT-license (see [LICENSE](./LICENSE)).
 
 > [!NOTE]
-> If you wish to incorporate this into your own repository, see: [INSTALL.md](./INSTALL.md).
-
-## \_variables.sh
-
-This should hold all the repository-specific variables shared with most of the scripts. This makes it easier to adjust the chain-id, binary name or node directory without having to change it in a lot of different files. See the [.\_variables.sh.example](./._variables.sh.example) for an example.
+> If you wish to incorporate this into your own repository, see: [.install/README.md](./.install/README.md).
 
 ## /backup
 
@@ -47,24 +42,6 @@ This script will print out your peer-id: _node-id@ip-address:port_. This is usef
 Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-file. So if you start the node on a different port without explicitly stating this in the _config.toml_-file, then the outputted port may not represent the actual port this node uses.
 
 > Add a --local flag to echo a local IP address, instead of your (public) external address.
-
-## /key
-
-### [create.sh](./key/create.sh)
-
-This script creates a _new_ key (or prompts to overwrite one if the _alias_ already exists).
-
-```
-sh key/create.sh <key_alias>
-```
-
-### [import.sh](./key/import.sh)
-
-This script imports an _existing_ key using the provided _private Ethereum key_.
-
-```
-sh key/import.sh <key_alias> <private_eth_key>
-```
 
 ## /service
 

@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# Existing modules
+MODULES="backup fetch info key service tools"
+
 # Root of repository
 ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 
-# Default template file
+# Flags (default values)
 TEMPLATE="template"
 EXCLUDE=""
 
@@ -37,10 +40,9 @@ while [ $# -gt 0 ]; do
 done
 
 # Variables
-MODULES="backup fetch info key service tools"
-OUTPUT=$ROOT/README.md
-TEMP=$ROOT/README.md.tmp
 INPUT=$ROOT/.readme/$TEMPLATE.md
+TEMP=$ROOT/README.md.tmp
+OUTPUT=$ROOT/README.md
 
 # Check if the specified template file exists
 if [ ! -f "$INPUT" ]; then
@@ -49,33 +51,35 @@ if [ ! -f "$INPUT" ]; then
 fi
 
 # Clear existing content in the destination README.md and README.md.tmp
-echo "" > "$OUTPUT"
+echo -n "" > "$OUTPUT"
+echo -n "" > "$TEMP"
 
-# Read the template content up to the placeholder
+# Header of README.md
 awk '/\[replace_with_module_readmes\]/ { exit } { print }' "$INPUT" >> "$OUTPUT"
 
-# Loop through the modules and append their README content
+# Body of README.md (outputted to a temporary file)
 for MODULE in $MODULES; do
-    README="$ROOT/${MODULE}/README.md"
-    if [ -f "$README" ]; then
-        # Append module README content to the destination README.md
+    MODULE_README="$ROOT/${MODULE}/README.md"
+    if [ -f "$MODULE_README" ]; then
+        # Looks like a difficult regex expression, but this makes sure ../ gets replaced with ./
+        awk '{gsub(/\]\(\.\.\//, "](./"); print}' "$MODULE_README" >> "$TEMP"
+        # Add a trailing newline
         echo "" >> "$TEMP"
-        # cat "$README" >> "$OUTPUT"
-        awk '{gsub(/\]\(\.\.\//, "](./"); print}' "$README" >> "$TEMP"
     fi
 done
 
-# Filter out undesired heading and append the filtered content to README.md
+# Filter body if exclusion list added and append it to the README.md
 if [ -z $EXCLUDE ]; then
     cat "$TEMP" >> "$OUTPUT"
 else
     bash $ROOT/.readme/filter.sh "$TEMP" "$OUTPUT" "$EXCLUDE"
 fi
 
-# Read the remaining content from the template file
+# Cleanup
+rm $TEMP
+
+# Footer of README.md
 awk '/\[replace_with_module_readmes\]/ { f=1; next } f { print }' "$INPUT" >> "$OUTPUT"
 
 echo "New README.md generated."
 
-# Remove tmp fle
-rm $TEMP

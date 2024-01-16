@@ -1,57 +1,56 @@
 #!/bin/bash
 
-# Specify the heading or section to filter out
+# Arguments
+INPUT=$1
+OUTPUT=$2
 EXCLUSIONS=$3
 
-# Input and output file paths
-INPUT_FILE=$1
-OUTPUT_FILE=$2
+# Variables
+SECTION_EXCLUDED=false
+SUB_SECTION_EXCLUDED=false
 
-# Function to check if a given heading or section is in the exclusion list
+# Helper function: check if a given section or sub-section is excluded
 isExcluded() {
-    local value="$1"
-    local exclusions="$2"
-    for exclusion in $(echo "$exclusions" | tr ',' ' '); do
-        if [ "$value" == "$exclusion" ]; then
-            echo "0"
-            return 0  # No match found, return failure
+    local VALUE="$1"
+    for EXCLUSION in $(echo "$EXCLUSIONS" | tr ',' ' '); do
+        if [ "$VALUE" == "$EXCLUSION" ]; then
+            echo "1"
+            return
         fi
     done
-    echo "1"
-    return 1  # No match found, return failure
+    echo "0"
 }
 
-# Check if the filtered heading contains a section
-section_excluded=false
-heading_excluded=false
-
 # Read the input file line by line
-while IFS= read -r line; do
+while IFS= read -r LINE; do
     # Check if the line starts with ## to determine the section
-    if [[ "$line" =~ ^"## /" ]]; then
-        heading_excluded=false
+    if [[ "$LINE" =~ ^"## /" ]]; then
+        # Reset SUB_SECTION_EXCLUDED
+        SUB_SECTION_EXCLUDED=false
+
         # Extract the value after "## /"
-        section_value="${line##*## /}"
-        if [[ $(isExcluded "$section_value" "$EXCLUSIONS") -eq 0 ]]; then
-          section_excluded=true
+        SECTION_NAME="${LINE##*## /}"
+
+        if [[ $(isExcluded "$SECTION_NAME") -eq 1 ]]; then
+          SECTION_EXCLUDED=true
         else
-          section_excluded=false
+          SECTION_EXCLUDED=false
         fi
     fi
 
-    if [[ "$line" =~ ^"### [" ]]; then
+    # Check if the line starts with ### to determine the sub-section
+    if [[ "$LINE" =~ ^"### [" ]]; then
         # Extract the value after "## /"
-        heading_value=$(echo "$line" | awk -F"[][]" '{print $2}')
-        if [[ $(isExcluded "$section_value/$heading_value" "$EXCLUSIONS") -eq 0 ]]; then
-          heading_excluded=true
+        SUB_SECTION_NAME=$(echo "$LINE" | awk -F"[][]" '{print $2}')
+        if [[ $(isExcluded "$SECTION_NAME/$SUB_SECTION_NAME") -eq 1 ]]; then
+          SUB_SECTION_EXCLUDED=true
         else
-          heading_excluded=false
+          SUB_SECTION_EXCLUDED=false
         fi
-        echo $heading_excluded
     fi
 
     # Output the line if not skipping
-    if [ "$section_excluded" = false ] && [ "$heading_excluded" = false ]; then
-        echo "$line" >> "$OUTPUT_FILE"
+    if [ "$SECTION_EXCLUDED" = false ] && [ "$SUB_SECTION_EXCLUDED" = false ]; then
+        echo "$LINE" >> "$OUTPUT"
     fi
-done < "$INPUT_FILE"
+done < "$INPUT"
