@@ -17,15 +17,15 @@ This is an example file for the _\_variables.sh_ file, which holds all the repos
 
 ## 3. Maintenance
 
-Upgrading the modules (or adding new ones) can be done using the [update.sh](./.version/update.sh)-file in the [.version](./.version)-folder.
+Upgrading the modules (or adding new ones) can be done using the [updater.sh](./.version/updater.sh)-file in the [.version](./.version)-folder.
 
-### [.versionmap](../.version/.versionmap)
+### [.versionmap](./.versionmap)
 
 This shows which versions for each module is currently installed.
 
-### [update.sh](../.version/update.sh)
+### [updater.sh](./updater.sh)
 
-This script can be used to update all the utilities. This also asks whether you'd want to include some modules and which you do not want. The versions for every module installed can be found in the [.versionmap](../.version/.versionmap) file.
+This script can be used to update all the utilities. This also asks whether you'd want to include some modules and which you do not want. The versions for every module installed can be found in the [.versionmap](./.versionmap) file.
 
 > [!CAUTION]
 > This does overwrite all the README.md files.
