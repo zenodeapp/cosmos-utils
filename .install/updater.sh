@@ -87,6 +87,12 @@ cleanup() {
 # Clean up temporary files
 cleanup
 
+# Download necessary files for readme alterations
+mkdir -p "$ROOT/.readme"
+wget --no-cache -qO- "$REPO/.readme/generate.sh" > $ROOT/.readme/generate.sh
+wget --no-cache -qO- "$REPO/.readme/filter.sh" > $ROOT/.readme/filter.sh
+wget --no-cache -qO- "$REPO/.readme/template-installed.md" > $ROOT/.readme/template-installed.md
+
 # Function to download a file
 downloadFile() {
     local remote_file="$1"
@@ -98,6 +104,14 @@ downloadFile() {
         mkdir -p "$(dirname "$ROOT/$remote_file")"
         wget --no-cache -q "$REPO/$remote_file" -O "$ROOT/$remote_file"
         echo "$remote_file $remote_version $remote_type" >> "$NEW_VERSION_MAP"
+
+        case "$remote_type" in
+            d)
+                bash $ROOT/.readme/filter.sh "$ROOT/$remote_file" "$ROOT/$remote_file.tmp" "$EXCLUDE"
+                cat "$ROOT/$remote_file.tmp" > "$ROOT/$remote_file"
+                rm "$ROOT/$remote_file.tmp"
+                ;;
+        esac
 
         case "$remote_file" in
             .install/updater.sh)
@@ -201,11 +215,7 @@ elif $CHANGE_MADE; then
 fi
 
 # Regenerate README if change detected
-mkdir -p "$ROOT/.readme"
-wget --no-cache -qO- "$REPO/.readme/generate.sh" > $ROOT/.readme/generate.sh
-wget --no-cache -qO- "$REPO/.readme/filter.sh" > $ROOT/.readme/filter.sh
-wget --no-cache -qO- "$REPO/.readme/template-installed.md" > $ROOT/.readme/template-installed.md
-sh $ROOT/.readme/generate.sh --exclude "$EXCLUDE" --template "template-installed"
+sh $ROOT/.readme/generate.sh --template "template-installed"
 
 # Clean up temporary files
 cleanup
