@@ -201,13 +201,11 @@ elif $CHANGE_MADE; then
 fi
 
 # Regenerate README if change detected
-if $CHANGE_MADE; then
-    mkdir -p "$ROOT/.readme"
-    wget --no-cache -qO- "$REPO/.readme/generate.sh" > $ROOT/.readme/generate.sh
-    wget --no-cache -qO- "$REPO/.readme/filter.sh" > $ROOT/.readme/filter.sh
-    wget --no-cache -qO- "$REPO/.readme/template-installed.md" > $ROOT/.readme/template-installed.md
-    sh $ROOT/.readme/generate.sh --exclude "$EXCLUDE" --template "template-installed"
-fi
+mkdir -p "$ROOT/.readme"
+wget --no-cache -qO- "$REPO/.readme/generate.sh" > $ROOT/.readme/generate.sh
+wget --no-cache -qO- "$REPO/.readme/filter.sh" > $ROOT/.readme/filter.sh
+wget --no-cache -qO- "$REPO/.readme/template-installed.md" > $ROOT/.readme/template-installed.md
+sh $ROOT/.readme/generate.sh --exclude "$EXCLUDE" --template "template-installed"
 
 # Clean up temporary files
 cleanup
