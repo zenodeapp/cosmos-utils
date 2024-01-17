@@ -24,5 +24,5 @@ RPC_SERVERS_URL=$FETCH_URL/rpc_servers.txt
 IP_INFO_PROVIDER=ipinfo.io/ip
 
 # /service module variables.
-SERVICE_DIR=$REPO_ROOT/services # Where the service file is located, $REPO_ROOT is not defined in this example.
+SERVICE_DIR=$(cd "$(dirname "$0")"/../.. && pwd)/services # Where the service file is located, this example points two directories back based on /service/* (e.g. /service/install.sh/../../services).
 SERVICE_FILE=$BINARY_NAME.service
