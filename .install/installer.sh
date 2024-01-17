@@ -33,7 +33,8 @@ if [ -z "$VERSION" ]; then
     VERSION=main
 fi
 
-echo "This will download the updater.sh file from the $VERSION branch/tag/commit of the cosmos-utils repository (change this using \e[3m--version [tag|commit|branch]\e[0m)."
+echo "This will download the updater.sh file from the $VERSION branch/tag/commit of the cosmos-utils repository and run it (change this using \e[3m--version [tag|commit|branch]\e[0m)."
+echo ""
 read -p "Do you want to continue? (Y/n): " ANSWER
 
 ANSWER=$(echo "$ANSWER" | tr 'A-Z' 'a-z')  # Convert to lowercase
@@ -48,4 +49,6 @@ REPO="https://raw.githubusercontent.com/zenodeapp/cosmos-utils/$VERSION"
 mkdir -p "$(dirname "$ROOT/$UPDATER")"
 wget --no-cache -q "$REPO/$UPDATER" -O "$ROOT/$UPDATER"
 
+echo ""
 sh $ROOT/$UPDATER --version "$VERSION" --reset
+rm -f $ROOT/installer.sh
