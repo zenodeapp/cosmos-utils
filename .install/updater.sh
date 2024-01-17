@@ -13,9 +13,6 @@ askYesNo() {
 # Root of repository
 ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 
-# Get version from config
-CONFIG=$ROOT/.install/.config
-
 # Parse command-line arguments
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -35,6 +32,9 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+# Get version from config
+CONFIG=$ROOT/.install/.config
 
 # Default version if not provided
 if [ -z "$VERSION" ]; then
@@ -81,7 +81,7 @@ UPGRADE_FOUND=false
 
 # Function to perform cleanup
 cleanup() {
-    rm "$REMOTE_VERSION_MAP" "$NEW_VERSION_MAP" > /dev/null 2>&1
+    rm -r "$REMOTE_VERSION_MAP" "$NEW_VERSION_MAP" "$ROOT/.readme" > /dev/null 2>&1
 }
 
 # Clean up temporary files
@@ -207,7 +207,6 @@ if $CHANGE_MADE; then
     wget --no-cache -qO- "$REPO/.readme/filter.sh" > $ROOT/.readme/filter.sh
     wget --no-cache -qO- "$REPO/.readme/template-installed.md" > $ROOT/.readme/template-installed.md
     sh $ROOT/.readme/generate.sh --exclude "$EXCLUDE" --template "template-installed"
-    rm -r $ROOT/.readme
 fi
 
 # Clean up temporary files
