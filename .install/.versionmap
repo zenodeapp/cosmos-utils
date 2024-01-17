@@ -1,5 +1,5 @@
 .install/updater.sh v1.0.0 r
-.install/_variables.sh.example v1.0.0 a
+.install/_variables.sh.example v1.0.1 a
 backup/create.sh v1.0.0 u
 backup/README.md v1.0.0 d
 fetch/peers.sh v1.0.0 u
