@@ -81,5 +81,5 @@ rm $TEMP
 # Footer of README.md
 awk '/\[replace_with_module_readmes\]/ { f=1; next } f { print }' "$INPUT" >> "$OUTPUT"
 
-echo "New README.md generated."
+echo "README.md has been regenerated."
 

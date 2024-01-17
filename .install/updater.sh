@@ -264,5 +264,11 @@ fi
 # Regenerate README if change detected
 sh $ROOT/.readme/generate.sh --template "template-installed"
 
+# Add _variables.sh file if we're resetting
+if $RESET; then
+    cat "$ROOT/.install/_variables.sh.example" > "$ROOT/_variables.sh"
+    echo "$ROOT/_variables.sh was overwritten by $ROOT/.install/_variables.sh.example, make sure to adapt this accordingly."
+fi
+
 # Clean up temporary files
 cleanup
