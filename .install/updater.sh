@@ -1,5 +1,24 @@
 #!/bin/bash
 
+usage() {
+    echo "COSMOS UTILS UPGRADER"
+    echo ""
+    echo "The upgrader is set to use tag/commit/branch '$VERSION' (add the flag \e[3m--version [tag|commit|branch]\e[0m to change this)."
+    echo ""
+    echo "CAUTION: running this will regenerate the README.md, if you made any custom changes, make sure to create a backup before continuing."
+    echo ""
+    read -p "Do you want to perform the upgrade using '$VERSION'? (y/N): " RESPONSE
+}
+
+usageInstall() {
+    echo "COSMOS UTILS INSTALLER"
+    echo ""
+    echo "This will install the Cosmos Utilities from https://github.com/zenodeapp/cosmos-utils using tag/commit/branch '$VERSION' (add the flag \e[3m--version [tag|commit|branch]\e[0m to change this)."
+    echo "The user will be able to choose which utilities will be downloaded and which won't."
+    echo ""
+    read -p "Do you want to install using '$VERSION'? (y/N): " RESPONSE
+}
+
 # Function to prompt the user for a yes/no answer (defaults to yes)
 askYesNo() {
     local ANSWER
@@ -13,6 +32,8 @@ askYesNo() {
 # Root of repository
 ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 
+RESET=false
+
 # Parse command-line arguments
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -24,6 +45,9 @@ while [ $# -gt 0 ]; do
                 echo "Error: --version option requires a value."
                 exit 1
             fi
+            ;;
+        --reset)
+            RESET=true
             ;;
         *)
             echo "Unknown option: $1"
@@ -54,13 +78,11 @@ if [ -z "$VERSION" ]; then
     VERSION=main
 fi
 
-echo "COSMOS UTILS UPGRADER"
-echo ""
-echo "The upgrader is set to use tag/commit/branch '$VERSION' (add the flag \e[3m--version [tag|commit|branch]\e[0m to change this)."
-echo ""
-echo "CAUTION: running this will regenerate the README.md, if you made any custom changes, make sure to create a backup before continuing."
-echo ""
-read -p "Do you want to perform the upgrade using '$VERSION'? (y/N): " RESPONSE
+if $RESET; then
+    usageInstall
+else
+    usage
+fi
 
 RESPONSE=$(echo "$RESPONSE" | tr 'A-Z' 'a-z')  # Convert to lowercase
 
@@ -87,6 +109,9 @@ cleanup() {
 # Clean up temporary files
 cleanup
 
+# Set up trap to call cleanup function on SIGINT (Ctrl+C)
+trap 'cleanup; echo; exit 1' INT
+
 # Download necessary files for readme alterations
 mkdir -p "$ROOT/.readme"
 wget --no-cache -qO- "$REPO/.readme/generate.sh" > $ROOT/.readme/generate.sh
@@ -99,8 +124,9 @@ downloadFile() {
     local remote_version="$2"
     local remote_type="$3"
     local prompt="$4"
+    local auto_yes="$5"
 
-    if askYesNo "$prompt"; then
+    if $auto_yes || askYesNo "$prompt"; then
         mkdir -p "$(dirname "$ROOT/$remote_file")"
         wget --no-cache -q "$REPO/$remote_file" -O "$ROOT/$remote_file"
         echo "$remote_file $remote_version $remote_type" >> "$NEW_VERSION_MAP"
@@ -111,10 +137,7 @@ downloadFile() {
                 cat "$ROOT/$remote_file.tmp" > "$ROOT/$remote_file"
                 rm "$ROOT/$remote_file.tmp"
                 ;;
-        esac
-
-        case "$remote_file" in
-            .install/updater.sh)
+            r)
                 # Custom behavior for updater.sh
                 tail -n +2 "$LOCAL_VERSION_MAP" >> "$NEW_VERSION_MAP"
                 cat $NEW_VERSION_MAP > "$LOCAL_VERSION_MAP"
@@ -147,28 +170,43 @@ while IFS= read -r remote_line; do
     # Check if the line exists in the local version map
     local_version=$(awk -v file="$remote_file" '$1==file {print $2}' "$LOCAL_VERSION_MAP")
 
+    next_module="${remote_file%%/*}"
+
+    if [ "$next_module" != "$current_module" ]; then
+        module_included=false
+        current_module="$next_module"
+    fi
+
     # File is not present in local version map
     if [ -z "$local_version" ]; then
-        # Default prompt
-        prompt="File '$remote_file' is not present locally. Do you want to download it?"
+        if ! [ "$remote_type" = "d" ] || $module_included; then
+            # Default prompt
+            prompt="File '$remote_file' is not present locally. Do you want to download it?"
 
-        # Utility prompt
-        if [ "$remote_type" = "u" ]; then
-            prompt="New utility '$remote_file' detected. Do you want to download it?"
-        fi
+            # Utility prompt
+            if [ "$remote_type" = "u" ]; then
+                prompt="New utility '$remote_file' detected. Do you want to download it?"
+            fi
+            
+            if [ "$remote_type" = "a" ] || [ "$remote_type" = "d" ]; then
+                auto_yes=true
+            fi
 
-        if ! downloadFile "$remote_file" "$remote_version" "$remote_type" "$prompt"; then
-            EXCLUDE="$EXCLUDE,$remote_file"
+            if ! downloadFile "$remote_file" "$remote_version" "$remote_type" "$prompt" "$auto_yes"; then
+                EXCLUDE="$EXCLUDE,$remote_file"
+            else
+                module_included=true
+            fi
         fi
     else
         if [ "$local_version" != "$remote_version" ]; then
             # Default prompt
-            prompt="Version mismatch for '$remote_file'. Local version: $local_version, Remote version: $remote_version. Do you want to update?"
+            prompt="Different version found for '$remote_file' (current: $local_version). Do you want to update to $remote_version?"
 
             UPGRADE_FOUND=true
            
             # Versions differ
-            if ! downloadFile "$remote_file" "$remote_version" "$remote_type" "$prompt"; then
+            if ! downloadFile "$remote_file" "$remote_version" "$remote_type" "$prompt" false; then
                 echo "$remote_file $local_version $remote_type" >> "$NEW_VERSION_MAP"
             fi
         else
