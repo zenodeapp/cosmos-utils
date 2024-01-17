@@ -1,6 +1,6 @@
 # Cosmos Utilities
 
-This contains useful scripts for maintaining a Cosmos SDK based node setup. The utilities provided have an own versioning system so that those who make use of this could always pull the latest modules of interest without needing to incorporate the entire repository.
+This contains useful scripts for maintaining a Cosmos SDK based node setup. The utilities provided have an own versioning system so that those who make use of this could always pull the latest modules or jump onto different versions if they wish to do so.
 
 This has been written by ZENODE and is licensed under the MIT-license (see [LICENSE](./LICENSE)).
 
@@ -25,13 +25,25 @@ sh backup/create.sh [backup_dir_path]
 
 This script fetches the (most recent) seeds and peers for the chain-id configured in the [\_variables.sh](./_variables.sh) file and adds it to the `seeds` and `persistent_peers` fields in the config.toml file residing in the node's directory.
 
+```
+sh fetch/peers.sh
+```
+
 ### [rpcs.sh](./fetch/rpcs.sh)
 
 This script fetches the (most recent) rpc_servers (state sync) for the chain-id configured in the [\_variables.sh](./_variables.sh) file and adds it to the `rpc_servers` field in the config.toml file residing in the node's directory.
 
+```
+sh fetch/rpcs.sh
+```
+
 ### [state.sh](./fetch/state.sh)
 
 This script fetches the (most recent) `genesis.json` file for the chain-id configured in the [\_variables.sh](./_variables.sh) file and places it inside of the /config-folder residing in the node's directory.
+
+```
+sh fetch/state.sh
+```
 
 ## /info
 
@@ -41,7 +53,29 @@ This script will print out your peer-id: _node-id@ip-address:port_. This is usef
 
 Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-file. So if you start the node on a different port without explicitly stating this in the _config.toml_-file, then the outputted port may not represent the actual port this node uses.
 
+```
+sh info/my-peer.sh
+```
+
 > Add a --local flag to echo a local IP address, instead of your (public) external address.
+
+## /key
+
+### [create.sh](./key/create.sh)
+
+This script creates a _new_ key (or prompts to overwrite one if the _alias_ already exists).
+
+```
+sh key/create.sh <key_alias>
+```
+
+### [import.sh](./key/import.sh)
+
+This script imports an _existing_ key using the provided _private Ethereum key_.
+
+```
+sh key/import.sh <key_alias> <private_eth_key>
+```
 
 ## /service
 
@@ -49,9 +83,17 @@ Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-fi
 
 This script installs the daemon as a service, which will automatically start the node whenever the device reboots. See the `$SERVICE_DIR` and `$SERVICE_FILE` variables in [\_variables.sh](./_variables.sh) to see which service gets installed.
 
+```
+sh service/install.sh
+```
+
 ### [uninstall.sh](./service/uninstall.sh)
 
 This script uninstalls the daemon as a service. See the `$SERVICE_FILE` variable in [\_variables.sh](./_variables.sh) to see which service gets uninstalled.
+
+```
+sh service/uninstall.sh
+```
 
 ## /tools
 
