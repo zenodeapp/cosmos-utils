@@ -1,21 +1,53 @@
 #!/bin/bash
 
-ROOT=$(cd "$(dirname "$0")"/.. && pwd)
-REPO="https://raw.githubusercontent.com/zenodeapp/cosmos-utils/main"
-REPO_VERSION_MAP="$REPO/.install/.versionmap"
-LOCAL_VERSION_MAP="$ROOT/.install/.versionmap"
-REMOTE_VERSION_MAP="$ROOT/.install/.versionmap.remote"
-NEW_VERSION_MAP="$ROOT/.install/.versionmap.new"
-
 # Function to prompt the user for a yes/no answer
 askYesNo() {
-    local answer
-    ( exec </dev/tty && read -p "$1 (y/n): " answer && case $answer in
+    local ANSWER
+    ( exec </dev/tty && read -p "$1 (y/n): " ANSWER && case $ANSWER in
         [Yy]* ) return 0;;
         [Nn]* ) return 1;;
         * ) echo "Please answer yes or no." && return 1;;
     esac )
 }
+
+# Root of repository
+ROOT=$(cd "$(dirname "$0")"/.. && pwd)
+
+# Get version from config
+CONFIG=$ROOT/.install/.config
+VERSION=main
+
+if [ -e "$CONFIG" ]; then
+    line=$(grep "^version=" "$CONFIG")
+
+    if [ -n "$line" ]; then
+        VERSION=$(echo "$line" | cut -d '=' -f 2)
+    else
+        echo "A version has to be configured in the $CONFIG file, ex: 'version=main'."
+        exit 1
+    fi
+else
+  echo "A $CONFIG file is necessary to perform this script."
+  exit 1
+fi
+
+echo ""
+echo "The upgrader is set to use tag/commit/branch '$VERSION' (see: $CONFIG)."
+read -p "Do you want to perform the upgrade using '$VERSION'? (y/N): " RESPONSE
+
+RESPONSE=$(echo "$RESPONSE" | tr 'A-Z' 'a-z')  # Convert to lowercase
+
+if [ "$RESPONSE" != "y" ]; then
+    echo "Aborted. Make the necessary changes in the $CONFIG file before continuing."
+    exit 1
+fi
+
+# Variables
+REPO="https://raw.githubusercontent.com/zenodeapp/cosmos-utils/$VERSION"
+REPO_VERSION_MAP="$REPO/.install/.versionmap"
+LOCAL_VERSION_MAP="$ROOT/.install/.versionmap"
+REMOTE_VERSION_MAP="$ROOT/.install/.versionmap.remote"
+NEW_VERSION_MAP="$ROOT/.install/.versionmap.new"
 
 # Download the remote version map
 mkdir -p "$(dirname "$REMOTE_VERSION_MAP")"
@@ -43,6 +75,20 @@ while IFS= read -r remote_line; do
             if askYesNo "Version mismatch for '$remote_file'. Local version: $local_version, Remote version: $remote_version. Do you want to update?"; then
                 mkdir -p "$(dirname "$ROOT/$remote_file")"
                 wget -q "$REPO/$remote_file" -O "$ROOT/$remote_file"
+
+                if [ "$remote_file" = ".install/updater.sh" ]; then
+                    echo "$remote_file $remote_version" >> "$NEW_VERSION_MAP"
+                    tail -n +2 "$LOCAL_VERSION_MAP" >> "$NEW_VERSION_MAP"
+                    cat $NEW_VERSION_MAP > "$LOCAL_VERSION_MAP"
+                    
+                    # Clean up temporary files
+                    rm "$REMOTE_VERSION_MAP"
+                    rm "$NEW_VERSION_MAP"
+                    
+                    echo "The updater.sh script has been updated. Please restart the script for changes to take effect."
+                    exit 0
+                fi
+
                 echo "$remote_file $remote_version" >> "$NEW_VERSION_MAP"
             else
                 # Keep the local version in the new version map
