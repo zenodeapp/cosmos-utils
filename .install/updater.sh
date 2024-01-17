@@ -1,5 +1,7 @@
 #!/bin/bash
 
+UPDATER_VERSION=v1.0.0
+
 usage() {
     echo "COSMOS UTILS UPGRADER"
     echo ""
@@ -118,13 +120,18 @@ wget --no-cache -qO- "$REPO/.readme/generate.sh" > $ROOT/.readme/generate.sh
 wget --no-cache -qO- "$REPO/.readme/filter.sh" > $ROOT/.readme/filter.sh
 wget --no-cache -qO- "$REPO/.readme/template-installed.md" > $ROOT/.readme/template-installed.md
 
+# Create local versionmap if it doesn't exist
+if [ ! -e "$LOCAL_VERSION_MAP" ]; then
+    echo ".install/updater.sh $UPDATER_VERSION r" > "$LOCAL_VERSION_MAP"
+fi
+
 # Function to download a file
 downloadFile() {
     local remote_file="$1"
     local remote_version="$2"
     local remote_type="$3"
     local prompt="$4"
-    local auto_yes="$5"
+    local auto_yes=$5
 
     if $auto_yes || askYesNo "$prompt"; then
         mkdir -p "$(dirname "$ROOT/$remote_file")"
@@ -190,9 +197,11 @@ while IFS= read -r remote_line; do
             
             if [ "$remote_type" = "a" ] || [ "$remote_type" = "d" ]; then
                 auto_yes=true
+            else
+                auto_yes=false
             fi
 
-            if ! downloadFile "$remote_file" "$remote_version" "$remote_type" "$prompt" "$auto_yes"; then
+            if ! downloadFile "$remote_file" "$remote_version" "$remote_type" "$prompt" $auto_yes; then
                 EXCLUDE="$EXCLUDE,$remote_file"
             else
                 module_included=true
