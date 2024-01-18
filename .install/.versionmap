@@ -14,7 +14,7 @@ key/README.md v1.0.0 d
 service/install.sh v1.0.0 u
 service/uninstall.sh v1.0.0 u
 service/README.md v1.0.1 d
-tools/restate-sync.sh v1.0.0 u
+tools/restate-sync.sh v1.0.1 u
 tools/port-shifter.sh v1.0.1 u
-tools/README.md v1.0.0 d
+tools/README.md v1.0.1 d
 LICENSE v1.0.0 a
