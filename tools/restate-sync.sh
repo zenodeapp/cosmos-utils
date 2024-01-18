@@ -18,11 +18,11 @@ ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 SAVE_AS="$ROOT/tools/_restate-sync.sh"
 
 # Repository where the port shifter resides
-VERSION=v1.0.0 # Added versioning for non-breaking changes and security measures
+VERSION=v1.0.1 # Added versioning for non-breaking changes and security measures
 EXTERNAL_REPO=https://raw.githubusercontent.com/zenodeapp/restate-sync/$VERSION
 
 # restate-sync.sh
-# See https://github.com/zenodeapp/restate-sync/blob/v1.0.0/restate-sync.sh
+# See https://github.com/zenodeapp/restate-sync/blob/v1.0.1/restate-sync.sh
 wget -O $SAVE_AS $EXTERNAL_REPO/restate-sync.sh
 
 # Execute script
