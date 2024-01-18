@@ -23,7 +23,7 @@ EXTERNAL_REPO=https://raw.githubusercontent.com/zenodeapp/restate-sync/$VERSION
 
 # restate-sync.sh
 # See https://github.com/zenodeapp/restate-sync/blob/v1.0.1/restate-sync.sh
-wget -O $SAVE_AS $EXTERNAL_REPO/restate-sync.sh
+wget -O $SAVE_AS $EXTERNAL_REPO/restate-sync.sh >/dev/null 2>&1
 
 # Execute script
 sh $SAVE_AS "$BINARY_NAME" "$NODE_DIR_NAME" "$1" "$2" "$3"
