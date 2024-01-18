@@ -19,7 +19,7 @@ EXTERNAL_REPO=https://raw.githubusercontent.com/zenodeapp/port-shifter/$VERSION
 
 # quick-shift.sh (simple variant, $1 is <port_increment_value>, e.g.: 1000)
 # See https://github.com/zenodeapp/port-shifter/blob/v1.0.1/quick-shift.sh
-wget -O $SAVE_AS $EXTERNAL_REPO/quick-shift.sh
+wget -O $SAVE_AS $EXTERNAL_REPO/quick-shift.sh >/dev/null 2>&1
 # shift-wizard.sh (more advanced, if you prefer to edit individual ports)
 # See: https://github.com/zenodeapp/port-shifter/blob/v1.0.1/shift-wizard.sh
 # wget -O $SAVE_AS $EXTERNAL_REPO/shift-wizard.sh
