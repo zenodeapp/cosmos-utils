@@ -5,6 +5,9 @@
 Integrating these scripts into your repository is not difficult. You could either:
 
 - Use the [installer.sh](./installer.sh) script; this should be done if you prefer not to include this as a repository and only add the scripts you find of use. Do this by placing it inside of an empty folder (for instance a _/utils_-folder) and run it. This gives you the choice to install whatever module you wish to incorporate and only imports the necessary files. The script will default to the `main` branch, but this can be changed.
+ ```
+  wget https://raw.githubusercontent.com/zenodeapp/cosmos-utils/main/.install/installer.sh
+  ```
 - Git clone or add it as a submodule; which will use github's versioning, but does mean you pull everything which may cause cluttering and confusion to those using the scripts. Submodules also require everyone to _recursively_ pull your repository.
 
 ## 2. Configure
